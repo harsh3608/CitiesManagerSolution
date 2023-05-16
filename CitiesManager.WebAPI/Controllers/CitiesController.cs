@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CitiesManager.WebAPI.DatabaseContext;
 using CitiesManager.WebAPI.Models;
 
 namespace CitiesManager.WebAPI.Controllers
 {
-//    [Route("api/[controller]")]
-//    [ApiController]
     public class CitiesController : CustomControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -17,7 +20,12 @@ namespace CitiesManager.WebAPI.Controllers
         }
 
         // GET: api/Cities
+        /// <summary>
+        /// To get list of cities (including city ID and city name) from 'cities' table
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [Produces("application/xml")]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
             var cities = await _context.Cities
@@ -83,6 +91,11 @@ namespace CitiesManager.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<City>> PostCity([Bind(nameof(City.CityID), nameof(City.CityName))] City city)
         {
+            //if (ModelState.IsValid == false)
+            //{
+            // return ValidationProblem(ModelState);
+            //}
+
             if (_context.Cities == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Cities'  is null.");
