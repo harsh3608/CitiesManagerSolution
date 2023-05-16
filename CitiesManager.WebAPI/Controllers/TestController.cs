@@ -5,7 +5,7 @@ namespace CitiesManager.WebAPI.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
-    public class TestController : ControllerBase
+    public class TestController : CustomControllerBase
     {
         [HttpGet]
         public string Method()
