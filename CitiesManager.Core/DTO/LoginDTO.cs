@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CitiesManager.Core.DTO
 {
-    internal class LoginDTO
+    public class LoginDTO
     {
+        [Required(ErrorMessage = "Email can't be blank")]
+        [EmailAddress(ErrorMessage = "Please enter valid email address")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password can't be blank")]
+        public string Password { get; set; } = string.Empty;
     }
 }
