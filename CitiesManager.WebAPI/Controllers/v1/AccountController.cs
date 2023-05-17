@@ -76,5 +76,44 @@ namespace CitiesManager.WebAPI.Controllers.v1
         }
 
 
+        [HttpPost("login")]
+        public async Task<IActionResult> PostLogin(LoginDTO loginDTO)
+        {
+            //validation
+            if (ModelState.IsValid == false)
+            {
+                string errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessage);
+            }
+
+
+            var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if(result.Succeeded)
+            {
+                ApplicationUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
+                
+                if(user == null) 
+                { 
+                    return NoContent();
+                }
+
+                return Ok(new {personName = user.PersonName, email = user.Email });
+            }
+            else
+            {
+                return Problem("Invalid email or password");
+            }
+        }
+
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> GetLogout()
+        {
+            await _signInManager.SignOutAsync();
+            return NoContent();
+        }
+
+
     }
 }
